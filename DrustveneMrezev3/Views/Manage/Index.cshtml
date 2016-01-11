@@ -1,0 +1,62 @@
+﻿@model DrustveneMrezev3.Models.IndexViewModel
+@{
+    ViewBag.Title = "Manage your account";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+
+<div>
+    
+    <hr />
+    <dl class="dl-horizontal">
+        
+        <dd>
+            
+            @if (Model.HasPassword)
+            {
+                <div>
+                    @Html.ActionLink("Change your password", "ChangePassword",null, new { @class = "btn btn-default btn-lg btn-block"})
+                </div>
+            }
+            else
+            {
+                <div>
+                    @Html.ActionLink("Create password", "SetPassword",null, new { @class = "btn btn-default btn-lg btn-block"})
+                </div>
+            }
+            &nbsp;
+        </dd>
+        @*<dt>External Logins:</dt>
+        <dd>
+            <div class="btn btn-default btn-lg btn-block">
+                @Model.Logins.Count [
+                @Html.ActionLink("Manage", "ManageLogins") ]
+            </div>
+        </dd>
+            *@
+
+        <dd>
+            <div>
+                @Html.ActionLink("User information", "ShowUserInformation", "Manage", null, new {@class = "btn btn-default btn-lg btn-block"})
+            </div>
+            &nbsp;
+        </dd>
+
+        <dd>
+            <div>
+                @Html.ActionLink("Update user movie likes", "UpdateUserLikes", "Manage", null, new {@class = "btn btn-default btn-lg btn-block"})
+            </div>
+            &nbsp;
+        </dd>
+
+        <dd>
+            <div>
+                @Html.ActionLink("Update tweets", "UpdateTweets", "Manage", null, new { @class = "btn btn-default btn-lg btn-block" })
+            </div>
+
+        </dd>
+
+    </dl>
+</div>

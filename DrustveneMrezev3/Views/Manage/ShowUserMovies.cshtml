@@ -1,0 +1,24 @@
+﻿@model IEnumerable<DrustveneMrezev3.MongoDB_objects.MovieLike>
+@{
+    ViewBag.Title = "ShowUserMovies";
+}
+
+<h2>My movies</h2>
+
+<table class="table table-hover ">
+    <thead>
+        <tr>
+            <th>Movie title</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var movieLike in Model.ToList())
+        {
+            <tr>
+                <td>@movieLike.Name</td>
+                <td><a href=@Url.Action("ShowMovieInformation", "Manage",new {id = movieLike.Id}) class="btn btn-primary btn-sm">Click for more details</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,25 @@
+﻿@model IEnumerable<DrustveneMrezev3.MongoDB_objects.Tweets>
+@{
+    ViewBag.Title = "ShowTweets";
+}
+
+<h2>Tweets</h2>
+
+@foreach (var tweet in Model.ToList())
+{
+    
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title"><img src=@tweet.UserImageUrl />
+<b>@tweet.UserName</b></h3>
+        </div>
+        <div class="panel-body">
+            <p>@tweet.Tweet</p>
+        </div>
+        <div class="panel-footer">
+            Retweeted: @tweet.Retweeted
+        </div>
+    </div>
+    
+}
+

@@ -1,0 +1,59 @@
+﻿@model DrustveneMrezev3.Models.ShowMovieInformationViewModel
+@{
+    ViewBag.Title = "ShowMovieInformation";
+}
+
+<div class="jumbotron">
+    
+    <div class="row">
+        <div class="col-xs-4" id="posterRow">
+            @if (Model.Poster == "N/A" || Model.Poster == "")
+            {
+                <i>No image.</i>
+            }
+            else
+            {
+                <img class="movieInformationPicture" id="poster" src=@Model.Poster />
+            }
+            
+        </div>
+        <div class="col-xs-8">
+            <div class="panel panel-default" id="movieInformation">
+                <div class="panel-body panel-info" id="movieInformationBody">
+                    <h3><b>@Model.Title (@Model.Released)</b></h3>
+                    <hr>
+                    <p>
+                        <div>
+                            <b>@Html.LabelFor(x => x.Director)</b> : @Model.Director
+                        </div>
+                        <div>
+                            <b>@Html.LabelFor(x => x.Actors)</b> : @Model.Actors
+                        </div>
+                        <div>
+                            <b>@Html.LabelFor(x => x.Genre)</b> : @Model.Genre
+                        </div>
+                        <div>
+                            <b>@Html.LabelFor(x => x.Language)</b> : @Model.Language
+                        </div>
+                        <div>
+                            <b>@Html.LabelFor(x => x.Runtime)</b> : @Model.Runtime
+                        </div>
+                    </p>
+                    <hr>
+                    <p>
+                        <img id="ratingIcon" src="~/Resources/imdb.png" /> @Model.ImdbRating &nbsp; <img id="ratingIcon" src="~/Resources/metascore.png" /> @Model.MetascoreRating
+                    </p>
+                    <hr>
+                    <p>
+                        @Model.Plot
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+
