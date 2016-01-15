@@ -12,5 +12,7 @@ namespace DrustveneMrezev3.MongoDB_objects
         public string Id { get; set; }
 
         public string Name { get; set; }
+
+        public int UserRating { get; set; }
     }
 }

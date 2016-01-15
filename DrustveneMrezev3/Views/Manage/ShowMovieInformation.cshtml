@@ -3,8 +3,10 @@
     ViewBag.Title = "ShowMovieInformation";
 }
 
+
+
 <div class="jumbotron">
-    
+    <input type="hidden" id="movieId" value="@Model.ID">
     <div class="row">
         <div class="col-xs-4" id="posterRow">
             @if (Model.Poster == "N/A" || Model.Poster == "")
@@ -47,7 +49,34 @@
                     <p>
                         @Model.Plot
                     </p>
+                    
+                    <strong class="choice">Rate movie:</strong>
 
+                    <span class="star-rating" id="ratingStar">
+                            @{
+                                var i = 1;
+                                while (i < Model.UserRating)
+                                {
+                                    <input type="radio" name="rating" value="@i"><i></i>
+                                    i++;
+                                }
+                                if (i == Model.UserRating)
+                                {
+                                    <input checked="checked" type="radio" name="rating" value="@i"><i></i>
+                                    i++;
+                                }
+                                while (i < 6)
+                                {
+                                    <input type="radio" name="rating" value="@i"><i></i>
+                                    i++;
+                                }
+                            }
+                            
+                        </span>
+                        
+                    
+                  
+                    
                 </div>
             </div>
         </div>

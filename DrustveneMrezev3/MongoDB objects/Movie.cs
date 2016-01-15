@@ -18,6 +18,7 @@ namespace DrustveneMrezev3.MongoDB_objects
         public string Released { get; set; }
         public string ImdbRating { get; set; }
         public string MetascoreRating { get; set; }
+
         public string Language { get; set; }
         public string Runtime { get; set; }
         public string Plot { get; set; }

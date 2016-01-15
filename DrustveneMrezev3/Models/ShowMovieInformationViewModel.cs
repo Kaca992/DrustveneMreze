@@ -9,6 +9,7 @@ namespace DrustveneMrezev3.Models
 {
     public class ShowMovieInformationViewModel
     {
+        public string ID { get; set; }
         [Display(Name = "Title")]
         public string Title { get; set; }
         [Display(Name = "Director")]
@@ -31,5 +32,7 @@ namespace DrustveneMrezev3.Models
         [Display(Name = "Plot summary")]
         public string Plot { get; set; }
         public string Poster { get; set; }
+
+        public int UserRating { get; set; }
     }
 }

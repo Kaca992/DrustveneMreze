@@ -254,8 +254,10 @@ namespace DrustveneMrezev3.Controllers
         {
             MongoDBManager mm = new MongoDBManager();
             Movie movie = mm.GetMovie(id);
+            var userRating = mm.GetUserRating(User.Identity.GetUserId(),id);
             ShowMovieInformationViewModel model = new ShowMovieInformationViewModel()
             {
+                ID = id,
                 Director = movie.Director,
                 Actors = movie.Actors,
                 Genre = movie.Genre,
@@ -266,12 +268,22 @@ namespace DrustveneMrezev3.Controllers
                 Plot = movie.Plot,
                 Language = movie.Language,
                 MetascoreRating = movie.MetascoreRating,
-                Released = movie.Released
+                Released = movie.Released,
+                UserRating = userRating
             };
 
             return View(model);
 
 
+        }
+
+        
+        public ActionResult UpdateUserRating(string movieID, int rating)
+        {
+            MongoDBManager mm = new MongoDBManager();
+            mm.UpdateUserRating(User.Identity.GetUserId(),movieID,rating);
+
+            return Json(string.Empty);
         }
 
         public async Task<ActionResult> UpdateUserLikes(IndexViewModel model)

@@ -137,6 +137,45 @@ namespace DrustveneMrezev3.Managers
             return Movies.Find(x => x.ID == id).Limit(1).ToListAsync().Result.FirstOrDefault();
         }
 
+        public int GetUserRating(string userID,string movieID)
+        {
+            UserInformation user = Users.Find(x => x.Id == userID).Limit(1).ToListAsync().Result.FirstOrDefault();
+            if (user == null)
+            {
+                return 0;
+            }
+            foreach (var movieLike in user.MovieLikes)
+            {
+                if (movieLike.Id == movieID)
+                {
+                    return movieLike.UserRating;
+                }
+            }
+
+            return 0;
+        }
+
+        public void UpdateUserRating(string userID, string movieID, int rating)
+        {
+            UserInformation user = GetUserInformation(userID);
+
+            if (user != null)
+            {
+                foreach (var movieLike in user.MovieLikes)
+                {
+                    if (movieLike.Id == movieID)
+                    {
+                        movieLike.UserRating = rating;
+                        break;
+                    }
+                }
+
+                var update = Builders<UserInformation>.Update.Set(x => x.MovieLikes, user.MovieLikes);
+                Users.UpdateOneAsync(x => x.Id == userID, update);
+                
+            }
+        }
+
         public async Task<List<MovieLike>> UpdateUserLikes(string id, string tokenFB)
         {
             
