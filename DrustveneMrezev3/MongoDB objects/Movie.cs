@@ -24,6 +24,9 @@ namespace DrustveneMrezev3.MongoDB_objects
         public string Plot { get; set; }
         public string Poster { get; set; }
 
+        public decimal AvgUserRating { get; set; }
+        public int NumberOfUsersRated { get; set; }
+
         public bool IsValid()
         {
             if (Title == "" || Director == "" || Runtime == "")

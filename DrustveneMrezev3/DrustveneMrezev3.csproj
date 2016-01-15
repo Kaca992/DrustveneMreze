@@ -224,6 +224,12 @@
     <Compile Include="MongoDB objects\MovieLike.cs" />
     <Compile Include="MongoDB objects\Tweets.cs" />
     <Compile Include="MongoDB objects\UserInformation.cs" />
+    <Compile Include="MovieRecommendation\ActorMovieRecomendations.cs" />
+    <Compile Include="MovieRecommendation\FilterParameters.cs" />
+    <Compile Include="MovieRecommendation\GenreMovieRecomendations.cs" />
+    <Compile Include="MovieRecommendation\IMovieRecomendationProvider.cs" />
+    <Compile Include="MovieRecommendation\MoviesBasedOnPeople.cs" />
+    <Compile Include="MovieRecommendation\MoviesSort.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Twitter\TwitterUserAuthorization.cs" />
@@ -300,6 +306,7 @@
     <Content Include="Views\Manage\ShowUserMovies.cshtml" />
     <Content Include="Views\Manage\ShowMovieInformation.cshtml" />
     <Content Include="Views\Manage\ShowTweets.cshtml" />
+    <Content Include="Views\Manage\MovieRecommendations.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

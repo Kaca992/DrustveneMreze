@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Mvc;
 using DrustveneMrezev3.Models;
 using DrustveneMrezev3.MongoDB_objects;
 using DrustveneMrezev3.Twitter;
@@ -137,6 +138,21 @@ namespace DrustveneMrezev3.Managers
             return Movies.Find(x => x.ID == id).Limit(1).ToListAsync().Result.FirstOrDefault();
         }
 
+        public List<Movie> GetMoviesWithGenre(string genre)
+        {
+            return Movies.Find(x => x.Genre.Contains(genre)).ToListAsync().Result.ToList();
+        }
+
+        public List<Movie> GetMoviesWithActor(string actor)
+        {
+            return Movies.Find(x => x.Actors.Contains(actor)).ToListAsync().Result.ToList();
+        }
+
+        public List<UserInformation> GetAllUsersWithExceptCurrent(string ID,MovieLike movie)
+        {
+            return Users.Find(x => x.Id != ID && x.MovieLikes.Contains(movie)).ToListAsync().Result;
+        }
+
         public int GetUserRating(string userID,string movieID)
         {
             UserInformation user = Users.Find(x => x.Id == userID).Limit(1).ToListAsync().Result.FirstOrDefault();
@@ -158,6 +174,7 @@ namespace DrustveneMrezev3.Managers
         public void UpdateUserRating(string userID, string movieID, int rating)
         {
             UserInformation user = GetUserInformation(userID);
+            int previousRanking = 0;
 
             if (user != null)
             {
@@ -165,14 +182,35 @@ namespace DrustveneMrezev3.Managers
                 {
                     if (movieLike.Id == movieID)
                     {
+                        previousRanking = movieLike.UserRating;
                         movieLike.UserRating = rating;
                         break;
                     }
                 }
 
                 var update = Builders<UserInformation>.Update.Set(x => x.MovieLikes, user.MovieLikes);
+
+
+                Movie movie = GetMovie(movieID);
+                decimal temp;
+                if (previousRanking != 0)
+                {
+                    temp = movie.AvgUserRating*movie.NumberOfUsersRated - previousRanking;
+                    movie.NumberOfUsersRated--;
+                }
+                else
+                {
+                    temp = movie.AvgUserRating*movie.NumberOfUsersRated;
+                }
+
+                movie.AvgUserRating = (temp + rating)/(movie.NumberOfUsersRated + 1);
+                movie.NumberOfUsersRated++;
+
+                var update2 = Builders<Movie>.Update.Set(x => x.AvgUserRating, movie.AvgUserRating);
+                var update3 = Builders<Movie>.Update.Set(x => x.NumberOfUsersRated, movie.NumberOfUsersRated);
+                Movies.UpdateOneAsync(x => x.ID == movieID, update2);
+                Movies.UpdateOneAsync(x => x.ID == movieID, update3);
                 Users.UpdateOneAsync(x => x.Id == userID, update);
-                
             }
         }
 

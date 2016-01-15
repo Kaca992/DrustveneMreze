@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using DrustveneMrezev3.Models;
 using DrustveneMrezev3.MongoDB_objects;
+using DrustveneMrezev3.MovieRecommendation;
 
 namespace DrustveneMrezev3.Controllers
 {
@@ -313,6 +314,17 @@ namespace DrustveneMrezev3.Controllers
         {
             MongoDBManager mm = new MongoDBManager();
             return View("ShowTweets", mm.GetAllTweets());
+        }
+
+        public ActionResult MovieRecommendations()
+        {
+            IMovieRecomendationProvider recomendation = new ActorMovieRecomendations();
+            FilterParameters parameters = new FilterParameters();
+            parameters.AddParameter("Action");
+            parameters.AddParameter("Adventure");
+            parameters.FilterMode = FilterMode.OR;
+            var temp = recomendation.GetRecommendedMovies(User.Identity.GetUserId());
+            return View();
         }
         
 
