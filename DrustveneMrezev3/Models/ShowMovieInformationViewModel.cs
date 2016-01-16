@@ -33,6 +33,9 @@ namespace DrustveneMrezev3.Models
         public string Plot { get; set; }
         public string Poster { get; set; }
 
+        public decimal AvgUserRating { get; set; }
         public int UserRating { get; set; }
+
+        public bool Liked { get; set; }
     }
 }

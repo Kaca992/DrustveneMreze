@@ -30,7 +30,6 @@
 
                 @if (Request.IsAuthenticated)
                 {
-                    <li><a href="@Url.Action("ShowTweets", "Manage")"><span><img id="homepageicon" src="~/Resources/tweetIcon.jpg"/></span>&nbsp; Tweets</a></li>
                     <li><a href="@Url.Action("ShowUserMovies", "Manage")"><span class="glyphicon glyphicon-facetime-video"></span>&nbsp; My movies</a></li>
                     <li><a href="@Url.Action("MovieRecommendations", "Manage")"><span class="glyphicon glyphicon-facetime-video"></span>&nbsp; MovieRecommendations</a></li>
                 }

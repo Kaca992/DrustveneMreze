@@ -247,8 +247,22 @@ namespace DrustveneMrezev3.Controllers
         {
             MongoDBManager mm = new MongoDBManager();
             UserInformation user = mm.GetUserInformation(User.Identity.GetUserId());
+            List<MovieListModel> movies = new List<MovieListModel>();
 
-            return View(user.MovieLikes);
+            foreach (var userMovie in user.MovieLikes)
+            {
+                MovieListModel newMovie = new MovieListModel()
+                {
+                    AvgUserRating = userMovie.UserRating,
+                    ID = userMovie.Id,
+                    Title = userMovie.Name
+                };
+                var movie = mm.GetMovie(userMovie.Id);
+                newMovie.Poster = movie.Poster;
+                movies.Add(newMovie);
+            }
+
+            return View(movies);
         }
 
         public ActionResult ShowMovieInformation(string id)
@@ -269,9 +283,15 @@ namespace DrustveneMrezev3.Controllers
                 Plot = movie.Plot,
                 Language = movie.Language,
                 MetascoreRating = movie.MetascoreRating,
-                Released = movie.Released,
-                UserRating = userRating
+                Released = movie.Released,                
+                AvgUserRating = movie.AvgUserRating                         
             };
+
+            if (userRating != null)
+            {
+                model.Liked = true;
+                model.UserRating = userRating.UserRating;
+            }
 
             return View(model);
 
@@ -283,6 +303,22 @@ namespace DrustveneMrezev3.Controllers
         {
             MongoDBManager mm = new MongoDBManager();
             mm.UpdateUserRating(User.Identity.GetUserId(),movieID,rating);
+
+            return Json(string.Empty);
+        }
+
+        public ActionResult DislikeMovie(string movieID)
+        {
+            MongoDBManager mm = new MongoDBManager();
+            mm.DislikeMovie(User.Identity.GetUserId(), movieID);
+
+            return Json(string.Empty);
+        }
+
+        public ActionResult LikeMovie(string movieID)
+        {
+            MongoDBManager mm = new MongoDBManager();
+            mm.LikeMovie(User.Identity.GetUserId(), movieID);
 
             return Json(string.Empty);
         }
@@ -316,15 +352,44 @@ namespace DrustveneMrezev3.Controllers
             return View("ShowTweets", mm.GetAllTweets());
         }
 
-        public ActionResult MovieRecommendations()
+        public ActionResult MovieRecommendations(string recommendationValue = "")
         {
-            IMovieRecomendationProvider recomendation = new ActorMovieRecomendations();
-            FilterParameters parameters = new FilterParameters();
-            parameters.AddParameter("Action");
-            parameters.AddParameter("Adventure");
-            parameters.FilterMode = FilterMode.OR;
-            var temp = recomendation.GetRecommendedMovies(User.Identity.GetUserId());
-            return View();
+            List<MovieListModel> moviesModel = new List<MovieListModel>();
+            IMovieRecomendationProvider recomendation;
+            switch (recommendationValue)
+            {
+                case "1":
+                    recomendation = new GenreMovieRecomendations();
+                    break;
+                case "2":
+                    recomendation = new ActorMovieRecomendations();
+                    break;
+                case "3":
+                    recomendation = new MoviesBasedOnPeople();
+                    break;
+                default:
+                    return View(moviesModel);
+            }
+
+            List<Movie> movies = recomendation.GetRecommendedMovies(User.Identity.GetUserId());
+
+            foreach (var userMovie in movies)
+            {
+                MovieListModel newMovie = new MovieListModel()
+                {
+                    AvgUserRating = userMovie.AvgUserRating,
+                    ID = userMovie.ID,
+                    Title = userMovie.Title,
+                    Poster = userMovie.Poster
+                };
+
+                moviesModel.Add(newMovie);
+                
+                
+            }
+
+            return View(moviesModel);
+
         }
         
 

@@ -153,22 +153,22 @@ namespace DrustveneMrezev3.Managers
             return Users.Find(x => x.Id != ID && x.MovieLikes.Contains(movie)).ToListAsync().Result;
         }
 
-        public int GetUserRating(string userID,string movieID)
+        public MovieLike GetUserRating(string userID,string movieID)
         {
             UserInformation user = Users.Find(x => x.Id == userID).Limit(1).ToListAsync().Result.FirstOrDefault();
             if (user == null)
             {
-                return 0;
+                return null;
             }
             foreach (var movieLike in user.MovieLikes)
             {
                 if (movieLike.Id == movieID)
                 {
-                    return movieLike.UserRating;
+                    return movieLike;
                 }
             }
 
-            return 0;
+            return null;
         }
 
         public void UpdateUserRating(string userID, string movieID, int rating)
@@ -214,6 +214,72 @@ namespace DrustveneMrezev3.Managers
             }
         }
 
+        public void DislikeMovie(string userID, string movieID)
+        {
+            UserInformation user = GetUserInformation(userID);
+            List<MovieLike> newMovieLikes = new List<MovieLike>();
+            int userRanking = 0;
+
+            if (user != null)
+            {
+                foreach (var movieLike in user.MovieLikes)
+                {
+                    if (movieLike.Id == movieID)
+                    {                       
+                        userRanking = movieLike.UserRating;                        
+                    }
+                    else
+                    {
+                        newMovieLikes.Add(movieLike);
+                    }
+                }
+
+                var update = Builders<UserInformation>.Update.Set(x => x.MovieLikes, newMovieLikes);
+
+
+                Movie movie = GetMovie(movieID);
+                decimal temp;
+                if (userRanking != 0)//user hasnt rated this movie so no need to refresh movie ranking
+                {
+                    temp = movie.AvgUserRating * movie.NumberOfUsersRated - userRanking;
+
+                    if ((movie.NumberOfUsersRated - 1) == 0)
+                    {
+                        movie.AvgUserRating = 0;
+                    }
+                    else
+                    {
+                        movie.AvgUserRating = (temp) / (movie.NumberOfUsersRated - 1);
+                    }
+
+                    movie.NumberOfUsersRated--;
+
+                    var update2 = Builders<Movie>.Update.Set(x => x.AvgUserRating, movie.AvgUserRating);
+                    var update3 = Builders<Movie>.Update.Set(x => x.NumberOfUsersRated, movie.NumberOfUsersRated);
+                    Movies.UpdateOneAsync(x => x.ID == movieID, update2);
+                    Movies.UpdateOneAsync(x => x.ID == movieID, update3);
+                }
+                
+                
+                Users.UpdateOneAsync(x => x.Id == userID, update);
+            }
+        }
+
+        public void LikeMovie(string userID, string movieID)
+        {
+            UserInformation user = GetUserInformation(userID);
+            MovieLike newMovieLike = new MovieLike();
+
+            Movie movie = GetMovie(movieID);
+
+            newMovieLike.Id = movie.ID;
+            newMovieLike.Name = movie.Title;
+            user.MovieLikes.Add(newMovieLike);
+
+            var update = Builders<UserInformation>.Update.Set(x => x.MovieLikes, user.MovieLikes);
+            Users.UpdateOneAsync(x => x.Id == userID, update);
+        }
+
         public async Task<List<MovieLike>> UpdateUserLikes(string id, string tokenFB)
         {
             
@@ -238,7 +304,7 @@ namespace DrustveneMrezev3.Managers
                 user.MovieLikes = movieLikes;
                 var update = Builders<UserInformation>.Update.Set(x => x.MovieLikes,movieLikes);
                 Users.UpdateOneAsync(x => x.Id == id,update);
-                var result = await UpdateMoviesDatabase(movieLikes);
+                //var result = await UpdateMoviesDatabase(movieLikes);
 
                 return movieLikes;
             }

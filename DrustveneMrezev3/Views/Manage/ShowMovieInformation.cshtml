@@ -7,6 +7,8 @@
 
 <div class="jumbotron">
     <input type="hidden" id="movieId" value="@Model.ID">
+    <input type="hidden" id="movieLiked" value="@Model.Liked">
+   
     <div class="row">
         <div class="col-xs-4" id="posterRow">
             @if (Model.Poster == "N/A" || Model.Poster == "")
@@ -17,7 +19,37 @@
             {
                 <img class="movieInformationPicture" id="poster" src=@Model.Poster />
             }
-            
+
+
+            <p>
+                <span>
+                    @if (Model.Liked == true)
+                    {
+                        <div id="movieIsLiked">
+                            <button id="liked" class="btn btn-primary btn-sm" disabled="disabled"><span class="glyphicon glyphicon-ok-circle"> Liked</span></button>
+                            <button id="dislike" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove-circle"> Dislike</span></button>
+                        </div>
+
+                        <div id="movieIsNotLiked" hidden>
+                            <button id="like" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-heart"> Like</span></button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div id="movieIsLiked" hidden>
+                            <button id="liked" class="btn btn-primary btn-sm" disabled="disabled"><span class="glyphicon glyphicon-ok-circle"> Liked</span></button>
+                            <button id="dislike" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove-circle"> Dislike</span></button>
+                        </div>
+
+                        <div id="movieIsNotLiked">
+                            <button id="like" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-heart"> Like</span></button>
+                        </div>
+                    }
+
+
+
+                </span>
+            </p>
         </div>
         <div class="col-xs-8">
             <div class="panel panel-default" id="movieInformation">
@@ -43,36 +75,98 @@
                     </p>
                     <hr>
                     <p>
-                        <img id="ratingIcon" src="~/Resources/imdb.png" /> @Model.ImdbRating &nbsp; <img id="ratingIcon" src="~/Resources/metascore.png" /> @Model.MetascoreRating
+                        @{
+                            var avgUserRating = "-";
+                            if (@Model.AvgUserRating != 0)
+                            {
+                                avgUserRating = @Model.AvgUserRating.ToString();
+                            }
+                        }
+                        <img id="ratingIcon" src="~/Resources/imdb.png"/> @Model.ImdbRating &nbsp; <img id="ratingIcon" src="~/Resources/metascore.png"/> @Model.MetascoreRating &nbsp; <img id="ratingIcon" src="~/Resources/starFull.png" /> @avgUserRating
                     </p>
                     <hr>
                     <p>
                         @Model.Plot
                     </p>
-                    
-                    <strong class="choice">Rate movie:</strong>
 
-                    <span class="star-rating" id="ratingStar">
-                            @{
-                                var i = 1;
-                                while (i < Model.UserRating)
-                                {
-                                    <input type="radio" name="rating" value="@i"><i></i>
-                                    i++;
+
+                    @if (Model.Liked == true)
+                    {
+                        <div id="showRating">
+                            <strong class="choice">Rate movie:</strong>
+
+                            <span class="star-rating" id="ratingStar">
+                                @{
+                                    var i = 1;
+                                    while (i < Model.UserRating)
+                                    {
+                                        <input type="radio" name="rating" value="@i">
+                                        <i></i>
+                                        i++;
+                                    }
+                                    if (i == Model.UserRating)
+                                    {
+                                        <input checked="checked" type="radio" name="rating" value="@i">
+                                        <i></i>
+                                        i++;
+                                    }
+                                    while (i < 6)
+                                    {
+                                        <input type="radio" name="rating" value="@i">
+                                        <i></i>
+                                        i++;
+                                    }
                                 }
-                                if (i == Model.UserRating)
-                                {
-                                    <input checked="checked" type="radio" name="rating" value="@i"><i></i>
-                                    i++;
+
+                            </span>
+                        </div>
+
+                        <div id="dntShowRating" hidden>
+                            <span>In order to rate a movie You must first like it.</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div id="showRating" hidden>
+                            <strong class="choice">Rate movie:</strong>
+
+                            <span class="star-rating" id="ratingStar">
+                                @{
+                        var i = 1;
+                        while (i < Model.UserRating)
+                        {
+                            <input type="radio" name="rating" value="@i">
+                                    <i></i>
+                            i++;
+                        }
+                        if (i == Model.UserRating)
+                        {
+                            <input checked="checked" type="radio" name="rating" value="@i">
+                                    <i></i>
+                            i++;
+                        }
+                        while (i < 6)
+                        {
+                            <input type="radio" name="rating" value="@i">
+                                    <i></i>
+                            i++;
+                        }
                                 }
-                                while (i < 6)
-                                {
-                                    <input type="radio" name="rating" value="@i"><i></i>
-                                    i++;
-                                }
-                            }
-                            
-                        </span>
+
+                            </span>
+                        </div>
+
+                        <div id="dntShowRating">
+                            <span>In order to rate a movie You must first like it.</span>
+                        </div>
+                    }
+                    
+                       
+                    
+                    
+                    
+                   
+                    
                         
                     
                   

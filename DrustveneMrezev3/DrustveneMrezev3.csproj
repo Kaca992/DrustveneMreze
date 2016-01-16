@@ -218,6 +218,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\MovieListModel.cs" />
     <Compile Include="Models\ShowMovieInformationViewModel.cs" />
     <Compile Include="Models\ShowUserInformationViewModel.cs" />
     <Compile Include="MongoDB objects\Movie.cs" />
@@ -247,10 +248,14 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Resources\approved.png" />
+    <Content Include="Resources\dislike.jpg" />
     <Content Include="Resources\imdb.jpg" />
     <Content Include="Resources\imdb.png" />
+    <Content Include="Resources\like.jpg" />
     <Content Include="Resources\metascore.png" />
     <Content Include="Resources\popcorn.png" />
+    <Content Include="Resources\starFull.png" />
     <Content Include="Resources\tweetIcon.jpg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
