@@ -51,11 +51,30 @@ namespace DrustveneMrezev3.MovieRecommendation
             }
 
             movies = mm.GetMoviesWithActor(favouriteActor);
+            List<Movie> moviesWithoutUserLiked = new List<Movie>();
+
+            foreach (var movie in movies)
+            {
+                bool exist = false;
+                foreach (var userLiked in user.MovieLikes)
+                {
+                    if (userLiked.Id == movie.ID)
+                    {
+                        exist = true;
+                        break;
+                    }
+                }
+
+                if (!exist)
+                {
+                    moviesWithoutUserLiked.Add(movie);
+                }
+            }
 
             MoviesSort ms = new MoviesSort();
 
-            movies.Sort(ms);
-            return movies;
+            moviesWithoutUserLiked.Sort(ms);
+            return moviesWithoutUserLiked;
 
         }
     }
