@@ -19,6 +19,8 @@ namespace DrustveneMrezev3.Controllers
     {
         public async Task<ActionResult> Index()
         {
+            TMDbManager tmdb = new TMDbManager();
+            tmdb.FillMovies();
             return View();
         }
 

@@ -26,7 +26,7 @@ namespace DrustveneMrezev3.MovieRecommendation
             foreach (var movieLike in user.MovieLikes)//get user favourite genra
             {
                 var movie = mm.GetMovie(movieLike.Id);
-                List<string> movieActors = movie.Actors.Split(',').ToList();
+                List<string> movieActors = movie.Actors;
 
                 foreach (var movieActor in movieActors)
                 {

@@ -40,7 +40,7 @@ namespace DrustveneMrezev3.MovieRecommendation
             foreach (var movieLike in user.MovieLikes)//get user favourite genra
             {
                 var movie = mm.GetMovie(movieLike.Id);
-                List<string> movieGenras = movie.Genre.Split(',').ToList();
+                List<string> movieGenras = movie.Genres;
 
                 foreach (var movieGenra in movieGenras)
                 {

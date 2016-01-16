@@ -83,6 +83,11 @@ namespace DrustveneMrezev3.Managers
             Users.InsertOneAsync(user);
         }
 
+        public void InsertMovies(List<Movie> movies)
+        {
+            Movies.InsertManyAsync(movies);
+        }
+
         public void InsertNewMovie(Movie movie)
         {
             Movies.InsertOneAsync(movie);
@@ -132,7 +137,7 @@ namespace DrustveneMrezev3.Managers
             return Users.Find(x => x.Id == id).Limit(1).ToListAsync().Result.FirstOrDefault();
         }
 
-        public Movie GetMovie(string id)
+        public Movie GetMovie(ObjectId id)
         {
             
             return Movies.Find(x => x.ID == id).Limit(1).ToListAsync().Result.FirstOrDefault();
@@ -140,7 +145,7 @@ namespace DrustveneMrezev3.Managers
 
         public List<Movie> GetMoviesWithGenre(string genre)
         {
-            return Movies.Find(x => x.Genre.Contains(genre)).ToListAsync().Result.ToList();
+            return Movies.Find(x => x.Genres.Contains(genre)).ToListAsync().Result.ToList();
         }
 
         public List<Movie> GetMoviesWithActor(string actor)
@@ -153,7 +158,7 @@ namespace DrustveneMrezev3.Managers
             return Users.Find(x => x.Id != ID && x.MovieLikes.Contains(movie)).ToListAsync().Result;
         }
 
-        public MovieLike GetUserRating(string userID,string movieID)
+        public MovieLike GetUserRating(string userID, ObjectId movieID)
         {
             UserInformation user = Users.Find(x => x.Id == userID).Limit(1).ToListAsync().Result.FirstOrDefault();
             if (user == null)
@@ -171,7 +176,7 @@ namespace DrustveneMrezev3.Managers
             return null;
         }
 
-        public void UpdateUserRating(string userID, string movieID, int rating)
+        public void UpdateUserRating(string userID, ObjectId movieID, int rating)
         {
             UserInformation user = GetUserInformation(userID);
             int previousRanking = 0;
@@ -192,7 +197,7 @@ namespace DrustveneMrezev3.Managers
 
 
                 Movie movie = GetMovie(movieID);
-                decimal temp;
+                Double temp;
                 if (previousRanking != 0)
                 {
                     temp = movie.AvgUserRating*movie.NumberOfUsersRated - previousRanking;
@@ -214,7 +219,7 @@ namespace DrustveneMrezev3.Managers
             }
         }
 
-        public void DislikeMovie(string userID, string movieID)
+        public void DislikeMovie(string userID, ObjectId movieID)
         {
             UserInformation user = GetUserInformation(userID);
             List<MovieLike> newMovieLikes = new List<MovieLike>();
@@ -238,7 +243,7 @@ namespace DrustveneMrezev3.Managers
 
 
                 Movie movie = GetMovie(movieID);
-                decimal temp;
+                Double temp;
                 if (userRanking != 0)//user hasnt rated this movie so no need to refresh movie ranking
                 {
                     temp = movie.AvgUserRating * movie.NumberOfUsersRated - userRanking;
@@ -265,7 +270,7 @@ namespace DrustveneMrezev3.Managers
             }
         }
 
-        public void LikeMovie(string userID, string movieID)
+        public void LikeMovie(string userID, ObjectId movieID)
         {
             UserInformation user = GetUserInformation(userID);
             MovieLike newMovieLike = new MovieLike();
@@ -303,7 +308,7 @@ namespace DrustveneMrezev3.Managers
                 
                 user.MovieLikes = movieLikes;
                 var update = Builders<UserInformation>.Update.Set(x => x.MovieLikes,movieLikes);
-                Users.UpdateOneAsync(x => x.Id == id,update);
+                await Users.UpdateOneAsync(x => x.Id == id,update);
                 //var result = await UpdateMoviesDatabase(movieLikes);
 
                 return movieLikes;

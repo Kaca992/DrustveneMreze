@@ -11,6 +11,7 @@ using Microsoft.Owin.Security;
 using DrustveneMrezev3.Models;
 using DrustveneMrezev3.MongoDB_objects;
 using DrustveneMrezev3.MovieRecommendation;
+using MongoDB.Bson;
 
 namespace DrustveneMrezev3.Controllers
 {
@@ -257,8 +258,8 @@ namespace DrustveneMrezev3.Controllers
                     ID = userMovie.Id,
                     Title = userMovie.Name
                 };
-                var movie = mm.GetMovie(userMovie.Id);
-                newMovie.Poster = movie.Poster;
+                //var movie = mm.GetMovie(userMovie.Id);
+                //newMovie.Poster = movie.Poster;
                 movies.Add(newMovie);
             }
 
@@ -267,7 +268,7 @@ namespace DrustveneMrezev3.Controllers
 
         public ActionResult ShowMovieInformation(string id)
         {
-            MongoDBManager mm = new MongoDBManager();
+            /*MongoDBManager mm = new MongoDBManager();
             Movie movie = mm.GetMovie(id);
             var userRating = mm.GetUserRating(User.Identity.GetUserId(),id);
             ShowMovieInformationViewModel model = new ShowMovieInformationViewModel()
@@ -292,14 +293,15 @@ namespace DrustveneMrezev3.Controllers
                 model.Liked = true;
                 model.UserRating = userRating.UserRating;
             }
-
+            
             return View(model);
+            */
 
-
+            return View();
         }
 
         
-        public ActionResult UpdateUserRating(string movieID, int rating)
+        public ActionResult UpdateUserRating(ObjectId movieID, int rating)
         {
             MongoDBManager mm = new MongoDBManager();
             mm.UpdateUserRating(User.Identity.GetUserId(),movieID,rating);
@@ -307,7 +309,7 @@ namespace DrustveneMrezev3.Controllers
             return Json(string.Empty);
         }
 
-        public ActionResult DislikeMovie(string movieID)
+        public ActionResult DislikeMovie(ObjectId movieID)
         {
             MongoDBManager mm = new MongoDBManager();
             mm.DislikeMovie(User.Identity.GetUserId(), movieID);
@@ -315,7 +317,7 @@ namespace DrustveneMrezev3.Controllers
             return Json(string.Empty);
         }
 
-        public ActionResult LikeMovie(string movieID)
+        public ActionResult LikeMovie(ObjectId movieID)
         {
             MongoDBManager mm = new MongoDBManager();
             mm.LikeMovie(User.Identity.GetUserId(), movieID);

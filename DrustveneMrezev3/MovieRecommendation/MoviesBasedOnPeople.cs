@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using DrustveneMrezev3.Managers;
 using DrustveneMrezev3.MongoDB_objects;
+using MongoDB.Bson;
 
 namespace DrustveneMrezev3.MovieRecommendation
 {
@@ -15,7 +16,7 @@ namespace DrustveneMrezev3.MovieRecommendation
             MongoDBManager mm = new MongoDBManager();
             List<Movie> movies = new List<Movie>();
 
-            Dictionary<string, int> similarMovies = new Dictionary<string, int>();
+            Dictionary<ObjectId, int> similarMovies = new Dictionary<ObjectId, int>();
             UserInformation user = mm.GetUserInformation(userID);
 
             if (user == null)

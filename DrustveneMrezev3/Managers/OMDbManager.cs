@@ -16,7 +16,7 @@ namespace DrustveneMrezev3.Managers
 {
     public class OMDbManager
     {
-        public static async Task<Movie> GetData(string id = "1", string name="Captain Phillips")
+        public static async Task<Movie> GetData(ObjectId id = new ObjectId(), string name="Captain Phillips")
         {
             using (var client = new HttpClient())
             {
@@ -24,8 +24,6 @@ namespace DrustveneMrezev3.Managers
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var searchName = HttpUtility.UrlEncode(name);
                 HttpResponseMessage response = await client.GetAsync(string.Format("?t={0}&r=json", searchName));
-               
-                
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -49,7 +47,7 @@ namespace DrustveneMrezev3.Managers
                         Title = name,
                         Actors = result.Actors,
                         Director = result.Director,
-                        Genre = result.Genre,
+                        Genres = result.Genre,
                         ImdbRating = result.imdbRating,
                         Language = result.Language,
                         MetascoreRating = result.Metascore,
