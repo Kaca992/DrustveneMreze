@@ -17,13 +17,19 @@ namespace DrustveneMrezev3.Controllers
 {
     public class HomeController : Controller
     {
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
-            TMDbManager tmdb = new TMDbManager();
-            tmdb.FillMovies();
             return View();
         }
-
         
+        public async Task<string> FillMovie(int page)
+        {
+            TMDbManager tmdb = new TMDbManager();
+            string output = await tmdb.FillMovies(page);
+            if (output == "ok")
+                return "ok";
+            else
+                return "nok";
+        }
     }
 }

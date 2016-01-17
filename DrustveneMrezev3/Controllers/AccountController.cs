@@ -13,6 +13,7 @@ using Microsoft.Owin.Security;
 using DrustveneMrezev3.Models;
 using DrustveneMrezev3.MongoDB_objects;
 using Facebook;
+using MongoDB.Bson;
 
 namespace DrustveneMrezev3.Controllers
 {
@@ -418,7 +419,12 @@ namespace DrustveneMrezev3.Controllers
                         {
                             foreach (dynamic movie in data.movies.data)
                             {
-                                facebookUser.MovieLikes.Add(new MovieLike() { Id = movie.id, Name = movie.name });
+                                TMDbManager movieManager = new TMDbManager();
+                                ObjectId? movieId = await movieManager.InsertMovieByName(movie.name);
+                                if (movieId != null)
+                                {
+                                    facebookUser.MovieLikes.Add(new MovieLike() { Id = movieId.Value, Name = movie.name });
+                                }
                             }
                         }
                         

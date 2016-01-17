@@ -270,6 +270,7 @@
     <Content Include="Resources\metascore.png" />
     <Content Include="Resources\popcorn.png" />
     <Content Include="Resources\starFull.png" />
+    <Content Include="Resources\tmdb.png" />
     <Content Include="Resources\tweetIcon.jpg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

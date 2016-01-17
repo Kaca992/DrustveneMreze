@@ -54,23 +54,32 @@
         <div class="col-xs-8">
             <div class="panel panel-default" id="movieInformation">
                 <div class="panel-body panel-info" id="movieInformationBody">
-                    <h3><b>@Model.Title (@Model.Released)</b></h3>
+                    <h3><b>@Model.Title (@Model.Released.Year)</b></h3>
                     <hr>
                     <p>
                         <div>
-                            <b>@Html.LabelFor(x => x.Director)</b> : @Model.Director
+                            <b>@Html.LabelFor(x => x.Director)</b> : <span style="border-radius: 4px; margin-right: 4px; background-color: #eee; padding: 0 4px;">@Model.Director</span>
                         </div>
                         <div>
-                            <b>@Html.LabelFor(x => x.Actors)</b> : @Model.Actors
+                            @{ int actor_counter = 0; }
+                            <b>@Html.LabelFor(x => x.Actors)</b> : @foreach (var actor in Model.Actors)
+                            {
+                                actor_counter++;
+                                if (actor_counter >= 10) { break; }
+                                <span style="border-radius: 4px; margin-right: 4px; background-color: #eee; padding: 0 4px;">@actor</span>
+                            }
                         </div>
                         <div>
-                            <b>@Html.LabelFor(x => x.Genre)</b> : @Model.Genre
+                            <b>@Html.LabelFor(x => x.Genres)</b> : @foreach (var genre in Model.Genres)
+                            {
+                                <span style="border-radius: 4px; margin-right: 4px; background-color: #eee; padding: 0 4px;">@genre</span>
+                            }
                         </div>
                         <div>
                             <b>@Html.LabelFor(x => x.Language)</b> : @Model.Language
                         </div>
                         <div>
-                            <b>@Html.LabelFor(x => x.Runtime)</b> : @Model.Runtime
+                            <b>@Html.LabelFor(x => x.Runtime)</b> : @Model.Runtime min
                         </div>
                     </p>
                     <hr>
@@ -82,7 +91,7 @@
                                 avgUserRating = @Model.AvgUserRating.ToString();
                             }
                         }
-                        <img id="ratingIcon" src="~/Resources/imdb.png"/> @Model.ImdbRating &nbsp; <img id="ratingIcon" src="~/Resources/metascore.png"/> @Model.MetascoreRating &nbsp; <img id="ratingIcon" src="~/Resources/starFull.png" /> @avgUserRating
+                        <img id="ratingIcon" src="~/Resources/imdb.png"/> @Model.ImdbRating &nbsp; <img id="ratingIcon" src="~/Resources/tmdb.png"/> @Model.TmdbRating &nbsp; <img id="ratingIcon" src="~/Resources/starFull.png" /> @avgUserRating
                     </p>
                     <hr>
                     <p>

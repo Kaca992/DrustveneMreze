@@ -5,19 +5,20 @@ using System.Web;
 using DrustveneMrezev3.Managers;
 using DrustveneMrezev3.MongoDB_objects;
 using MongoDB.Bson;
+using System.Threading.Tasks;
 
 namespace DrustveneMrezev3.MovieRecommendation
 {
     //returns movies that where liked by people that liked the same movies as us
     public class MoviesBasedOnPeople : IMovieRecomendationProvider
     {
-        public List<Movie> GetRecommendedMovies(string userID)
+        public async Task<List<Movie>> GetRecommendedMovies(string userID)
         {
             MongoDBManager mm = new MongoDBManager();
             List<Movie> movies = new List<Movie>();
 
             Dictionary<ObjectId, int> similarMovies = new Dictionary<ObjectId, int>();
-            UserInformation user = mm.GetUserInformation(userID);
+            UserInformation user = await mm.GetUserInformation(userID);
 
             if (user == null)
             {
@@ -56,11 +57,10 @@ namespace DrustveneMrezev3.MovieRecommendation
                 }
 
                 counter++;
-                movies.Add(mm.GetMovie(sortedSimilarMovie.Key));
+                movies.Add(await mm.GetMovie(sortedSimilarMovie.Key));
             }
 
             return movies;
-
         }
     }
 }

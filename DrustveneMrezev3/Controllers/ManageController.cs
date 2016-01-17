@@ -230,10 +230,10 @@ namespace DrustveneMrezev3.Controllers
 
         
        
-        public ActionResult ShowUserInformation()
+        public async Task<ActionResult> ShowUserInformation()
         {
             MongoDBManager mm = new MongoDBManager();
-            UserInformation user = mm.GetUserInformation(User.Identity.GetUserId());
+            UserInformation user = await mm.GetUserInformation(User.Identity.GetUserId());
             ShowUserInformationViewModel model = new ShowUserInformationViewModel()
             {
                 Birthday = user.Birthday,
@@ -244,47 +244,52 @@ namespace DrustveneMrezev3.Controllers
             return View(model);
         }
 
-        public ActionResult ShowUserMovies()
+        public async Task<ActionResult> ShowUserMovies()
         {
             MongoDBManager mm = new MongoDBManager();
-            UserInformation user = mm.GetUserInformation(User.Identity.GetUserId());
+            UserInformation user = await mm.GetUserInformation(User.Identity.GetUserId());
             List<MovieListModel> movies = new List<MovieListModel>();
 
-            foreach (var userMovie in user.MovieLikes)
+            if (user.MovieLikes != null)
             {
-                MovieListModel newMovie = new MovieListModel()
+                foreach (var userMovie in user.MovieLikes)
                 {
-                    AvgUserRating = userMovie.UserRating,
-                    ID = userMovie.Id,
-                    Title = userMovie.Name
-                };
-                //var movie = mm.GetMovie(userMovie.Id);
-                //newMovie.Poster = movie.Poster;
-                movies.Add(newMovie);
+                    MovieListModel newMovie = new MovieListModel()
+                    {
+                        AvgUserRating = userMovie.UserRating,
+                        ID = userMovie.Id,
+                        Title = userMovie.Name
+                    };
+                    var movie = await mm.GetMovie(userMovie.Id);
+                    newMovie.Poster = movie.Poster;
+                    movies.Add(newMovie);
+                }
             }
 
             return View(movies);
         }
 
-        public ActionResult ShowMovieInformation(string id)
+        public async Task<ActionResult> ShowMovieInformation(string id)
         {
-            /*MongoDBManager mm = new MongoDBManager();
-            Movie movie = mm.GetMovie(id);
-            var userRating = mm.GetUserRating(User.Identity.GetUserId(),id);
+            var oid = new ObjectId(id);
+            MongoDBManager mm = new MongoDBManager();
+            Movie movie = await mm.GetMovie(oid);
+            var userRating = mm.GetUserRating(User.Identity.GetUserId(), oid);
             ShowMovieInformationViewModel model = new ShowMovieInformationViewModel()
             {
-                ID = id,
+                ID = oid,
                 Director = movie.Director,
                 Actors = movie.Actors,
-                Genre = movie.Genre,
+                Genres = movie.Genres,
                 ImdbRating = movie.ImdbRating,
+                TmdbRating = movie.TMDbRating,
                 Title = movie.Title,
                 Runtime = movie.Runtime,
                 Poster = movie.Poster,
                 Plot = movie.Plot,
                 Language = movie.Language,
                 MetascoreRating = movie.MetascoreRating,
-                Released = movie.Released,                
+                Released = movie.Released.Value,                
                 AvgUserRating = movie.AvgUserRating                         
             };
 
@@ -295,32 +300,31 @@ namespace DrustveneMrezev3.Controllers
             }
             
             return View(model);
-            */
-
-            return View();
         }
-
         
-        public ActionResult UpdateUserRating(ObjectId movieID, int rating)
+        public async Task<ActionResult> UpdateUserRating(string movieID, int rating)
         {
+            ObjectId oid = new ObjectId(movieID);
             MongoDBManager mm = new MongoDBManager();
-            mm.UpdateUserRating(User.Identity.GetUserId(),movieID,rating);
+            await mm.UpdateUserRating(User.Identity.GetUserId(), oid, rating);
 
             return Json(string.Empty);
         }
 
-        public ActionResult DislikeMovie(ObjectId movieID)
+        public async Task<ActionResult> DislikeMovie(string movieID)
         {
+            ObjectId oid = new ObjectId(movieID);
             MongoDBManager mm = new MongoDBManager();
-            mm.DislikeMovie(User.Identity.GetUserId(), movieID);
+            await mm.DislikeMovie(User.Identity.GetUserId(), oid);
 
             return Json(string.Empty);
         }
 
-        public ActionResult LikeMovie(ObjectId movieID)
+        public async Task<ActionResult> LikeMovie(string movieID)
         {
+            ObjectId oid = new ObjectId(movieID);
             MongoDBManager mm = new MongoDBManager();
-            mm.LikeMovie(User.Identity.GetUserId(), movieID);
+            await mm.LikeMovie(User.Identity.GetUserId(), oid);
 
             return Json(string.Empty);
         }
@@ -354,7 +358,7 @@ namespace DrustveneMrezev3.Controllers
             return View("ShowTweets", mm.GetAllTweets());
         }
 
-        public ActionResult MovieRecommendations(string recommendationValue = "")
+        public async Task<ActionResult> MovieRecommendations(string recommendationValue = "")
         {
             List<MovieListModel> moviesModel = new List<MovieListModel>();
             IMovieRecomendationProvider recomendation;
@@ -373,7 +377,7 @@ namespace DrustveneMrezev3.Controllers
                     return View(moviesModel);
             }
 
-            List<Movie> movies = recomendation.GetRecommendedMovies(User.Identity.GetUserId());
+            List<Movie> movies = await recomendation.GetRecommendedMovies(User.Identity.GetUserId());
 
             foreach (var userMovie in movies)
             {

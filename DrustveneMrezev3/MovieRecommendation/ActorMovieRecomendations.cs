@@ -4,18 +4,19 @@ using System.Linq;
 using System.Web;
 using DrustveneMrezev3.Managers;
 using DrustveneMrezev3.MongoDB_objects;
+using System.Threading.Tasks;
 
 namespace DrustveneMrezev3.MovieRecommendation
 {
     public class ActorMovieRecomendations : IMovieRecomendationProvider
     {
-        public List<Movie> GetRecommendedMovies(string userID)
+        public async Task<List<Movie>> GetRecommendedMovies(string userID)
         {
             MongoDBManager mm = new MongoDBManager();
             List<Movie> movies = new List<Movie>();
 
             Dictionary<string, int> actors = new Dictionary<string, int>();
-            UserInformation user = mm.GetUserInformation(userID);
+            UserInformation user = await mm.GetUserInformation(userID);
 
             if (user == null)
             {
@@ -25,7 +26,7 @@ namespace DrustveneMrezev3.MovieRecommendation
 
             foreach (var movieLike in user.MovieLikes)//get user favourite genra
             {
-                var movie = mm.GetMovie(movieLike.Id);
+                var movie = await mm.GetMovie(movieLike.Id);
                 List<string> movieActors = movie.Actors;
 
                 foreach (var movieActor in movieActors)
@@ -50,7 +51,7 @@ namespace DrustveneMrezev3.MovieRecommendation
                 }
             }
 
-            movies = mm.GetMoviesWithActor(favouriteActor);
+            movies = await mm.GetMoviesWithActor(favouriteActor);
             List<Movie> moviesWithoutUserLiked = new List<Movie>();
 
             foreach (var movie in movies)
@@ -75,7 +76,6 @@ namespace DrustveneMrezev3.MovieRecommendation
 
             moviesWithoutUserLiked.Sort(ms);
             return moviesWithoutUserLiked;
-
         }
     }
 }

@@ -43,19 +43,8 @@ namespace DrustveneMrezev3.Managers
                     
                     Movie movie = new Movie()
                     {
-                        ID = id,
-                        Title = name,
-                        Actors = result.Actors,
-                        Director = result.Director,
-                        Genres = result.Genre,
                         ImdbRating = result.imdbRating,
-                        Language = result.Language,
-                        MetascoreRating = result.Metascore,
-                        Released = result.Released,
-                        Runtime = result.Runtime,
-                        Plot = result.Plot,
-                        Poster = result.Poster
-                        
+                        MetascoreRating = result.Metascore
                     };
 
                     /*if (result.Poster != "")

@@ -10,6 +10,6 @@ namespace DrustveneMrezev3.MovieRecommendation
 {
     public interface IMovieRecomendationProvider
     {
-        List<Movie> GetRecommendedMovies(string userID);
+        Task<List<Movie>> GetRecommendedMovies (string userID);
     }
 }

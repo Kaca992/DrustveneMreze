@@ -8,8 +8,7 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace DrustveneMrezev3.MongoDB_objects
 {
     public class UserInformation
-    {
-       
+    {       
         [BsonId]
         public string Id { get; set; }
         public string Email { get; set; }
@@ -17,8 +16,6 @@ namespace DrustveneMrezev3.MongoDB_objects
         public string LastName { get; set; }
         [BsonDateTimeOptions(Kind = DateTimeKind.Local, DateOnly = true)]
         public DateTime Birthday { get; set; }
-        public List<MovieLike> MovieLikes { get; set; }
-
-        
+        public List<MovieLike> MovieLikes { get; set; }        
     }
 }

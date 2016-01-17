@@ -5,18 +5,19 @@ using System.Web;
 using System.Web.Razor;
 using DrustveneMrezev3.Managers;
 using DrustveneMrezev3.MongoDB_objects;
+using System.Threading.Tasks;
 
 namespace DrustveneMrezev3.MovieRecommendation
 {
     public class GenreMovieRecomendations:IMovieRecomendationProvider
     {
-        public List<Movie> GetRecommendedMovies(string userID)
+        public async Task<List<Movie>> GetRecommendedMovies(string userID)
         {
             MongoDBManager mm = new MongoDBManager();
             List<Movie> movies = new List<Movie>();
 
             Dictionary<string,int> genras = new Dictionary<string, int>();
-            UserInformation user = mm.GetUserInformation(userID);
+            UserInformation user = await mm.GetUserInformation(userID);
 
             if (user == null)
             {
@@ -39,7 +40,7 @@ namespace DrustveneMrezev3.MovieRecommendation
             return movies;*/
             foreach (var movieLike in user.MovieLikes)//get user favourite genra
             {
-                var movie = mm.GetMovie(movieLike.Id);
+                var movie = await mm.GetMovie(movieLike.Id);
                 List<string> movieGenras = movie.Genres;
 
                 foreach (var movieGenra in movieGenras)
