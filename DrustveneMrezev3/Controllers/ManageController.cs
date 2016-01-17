@@ -368,6 +368,7 @@ namespace DrustveneMrezev3.Controllers
         {
             List<MovieListModel> moviesModel = new List<MovieListModel>();
             IMovieRecomendationProvider recomendation;
+            ViewBag.recommendationValue = recommendationValue;
             switch (recommendationValue)
             {
                 case "1":
@@ -380,7 +381,7 @@ namespace DrustveneMrezev3.Controllers
                     recomendation = new MoviesBasedOnPeople();
                     break;
                 default:
-                    return View(moviesModel);
+                    return View(moviesModel.ToPagedList(page ?? 1, 12));
             }
 
             List<Movie> movies = await recomendation.GetRecommendedMovies(User.Identity.GetUserId());

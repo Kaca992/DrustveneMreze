@@ -334,6 +334,7 @@
     <Content Include="Views\Manage\ShowTweets.cshtml" />
     <Content Include="Views\Manage\MovieRecommendations.cshtml" />
     <Content Include="Views\Home\Fill.cshtml" />
+    <Content Include="Views\Manage\ShowRecommendMovies.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
