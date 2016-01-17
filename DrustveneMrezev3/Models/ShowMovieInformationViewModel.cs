@@ -34,6 +34,8 @@ namespace DrustveneMrezev3.Models
         public int? Runtime { get; set; }
         [Display(Name = "Plot summary")]
         public string Plot { get; set; }
+        [Display(Name = "YouTube")]
+        public string YouTube { get; set; }
         public string Poster { get; set; }
 
         public Double AvgUserRating { get; set; }

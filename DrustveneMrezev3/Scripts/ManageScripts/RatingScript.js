@@ -3,6 +3,7 @@
         var rating = this.value;
         var id = $('#movieId').val();
 
+        $('#userRatingRefresh').html(rating);
 
         $.ajax({
             type: "POST",

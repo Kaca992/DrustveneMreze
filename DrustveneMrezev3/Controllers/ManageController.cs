@@ -12,6 +12,7 @@ using DrustveneMrezev3.Models;
 using DrustveneMrezev3.MongoDB_objects;
 using DrustveneMrezev3.MovieRecommendation;
 using MongoDB.Bson;
+using PagedList;
 
 namespace DrustveneMrezev3.Controllers
 {
@@ -244,7 +245,7 @@ namespace DrustveneMrezev3.Controllers
             return View(model);
         }
 
-        public async Task<ActionResult> ShowUserMovies()
+        public async Task<ActionResult> ShowUserMovies(int? page)
         {
             MongoDBManager mm = new MongoDBManager();
             UserInformation user = await mm.GetUserInformation(User.Identity.GetUserId());
@@ -266,7 +267,7 @@ namespace DrustveneMrezev3.Controllers
                 }
             }
 
-            return View(movies);
+            return View(movies.ToPagedList(page ?? 1, 12));
         }
 
         public async Task<ActionResult> ShowMovieInformation(string id)
@@ -283,6 +284,7 @@ namespace DrustveneMrezev3.Controllers
                 Genres = movie.Genres,
                 ImdbRating = movie.ImdbRating,
                 TmdbRating = movie.TMDbRating,
+                YouTube = movie.YouTube,
                 Title = movie.Title,
                 Runtime = movie.Runtime,
                 Poster = movie.Poster,
@@ -301,7 +303,8 @@ namespace DrustveneMrezev3.Controllers
             
             return View(model);
         }
-        
+
+        [HttpPost]
         public async Task<ActionResult> UpdateUserRating(string movieID, int rating)
         {
             ObjectId oid = new ObjectId(movieID);
@@ -311,6 +314,7 @@ namespace DrustveneMrezev3.Controllers
             return Json(string.Empty);
         }
 
+        [HttpPost]
         public async Task<ActionResult> DislikeMovie(string movieID)
         {
             ObjectId oid = new ObjectId(movieID);
@@ -320,9 +324,11 @@ namespace DrustveneMrezev3.Controllers
             return Json(string.Empty);
         }
 
+        [HttpPost]
         public async Task<ActionResult> LikeMovie(string movieID)
         {
             ObjectId oid = new ObjectId(movieID);
+            System.Diagnostics.Debug.WriteLine(movieID);
             MongoDBManager mm = new MongoDBManager();
             await mm.LikeMovie(User.Identity.GetUserId(), oid);
 
@@ -358,7 +364,7 @@ namespace DrustveneMrezev3.Controllers
             return View("ShowTweets", mm.GetAllTweets());
         }
 
-        public async Task<ActionResult> MovieRecommendations(string recommendationValue = "")
+        public async Task<ActionResult> MovieRecommendations(int? page, string recommendationValue = "")
         {
             List<MovieListModel> moviesModel = new List<MovieListModel>();
             IMovieRecomendationProvider recomendation;
@@ -394,10 +400,8 @@ namespace DrustveneMrezev3.Controllers
                 
             }
 
-            return View(moviesModel);
-
-        }
-        
+            return View(moviesModel.ToPagedList(page ?? 1, 12));
+        }        
 
 #region Helpers
         // Used for XSRF protection when adding external logins

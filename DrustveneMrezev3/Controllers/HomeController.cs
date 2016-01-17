@@ -31,5 +31,10 @@ namespace DrustveneMrezev3.Controllers
             else
                 return "nok";
         }
+
+        public ActionResult Fill()
+        {
+            return View();
+        }
     }
 }

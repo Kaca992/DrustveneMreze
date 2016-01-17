@@ -151,6 +151,11 @@ namespace DrustveneMrezev3.Managers
             return await Movies.Find(x => x.ID == id).FirstAsync();
         }
 
+        public async Task<List<Movie>> GetMovies()
+        {
+            return await Movies.Find(new BsonDocument()).ToListAsync();
+        }
+
         public List<Movie> GetMoviesWithGenre(string genre)
         {
             return Movies.Find(x => x.Genres.Contains(genre)).ToListAsync().Result.ToList();
@@ -279,6 +284,7 @@ namespace DrustveneMrezev3.Managers
 
         public async Task LikeMovie(string userID, ObjectId movieID)
         {
+            System.Diagnostics.Debug.WriteLine(movieID);
             UserInformation user = await GetUserInformation(userID);
             MovieLike newMovieLike = new MovieLike();
 

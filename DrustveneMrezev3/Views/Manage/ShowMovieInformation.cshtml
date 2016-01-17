@@ -91,13 +91,8 @@
                                 avgUserRating = @Model.AvgUserRating.ToString();
                             }
                         }
-                        <img id="ratingIcon" src="~/Resources/imdb.png"/> @Model.ImdbRating &nbsp; <img id="ratingIcon" src="~/Resources/tmdb.png"/> @Model.TmdbRating &nbsp; <img id="ratingIcon" src="~/Resources/starFull.png" /> @avgUserRating
+                        <img id="ratingIcon" src="~/Resources/imdb.png"/> @Model.ImdbRating &nbsp; <img id="ratingIcon" src="~/Resources/tmdb.png"/> @Model.TmdbRating &nbsp; <img id="ratingIcon" src="~/Resources/starFull.png" /> <span id="userRatingRefresh">@avgUserRating</span>
                     </p>
-                    <hr>
-                    <p>
-                        @Model.Plot
-                    </p>
-
 
                     @if (Model.Liked == true)
                     {
@@ -169,17 +164,31 @@
                             <span>In order to rate a movie You must first like it.</span>
                         </div>
                     }
-                    
-                       
-                    
-                    
-                    
-                   
-                    
-                        
-                    
-                  
-                    
+
+                    <hr>
+                    <p>
+                        @Model.Plot
+                    </p>
+
+                    <div id="ytplayer"></div>
+                    <script>
+                        // Load the IFrame Player API code asynchronously.
+                        var tag = document.createElement('script');
+                        tag.src = "https://www.youtube.com/player_api";
+                        var firstScriptTag = document.getElementsByTagName('script')[0];
+                        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+                        // Replace the 'ytplayer' element with an <iframe> and
+                        // YouTube player after the API code downloads.
+                        var player;
+                        function onYouTubePlayerAPIReady() {
+                            player = new YT.Player('ytplayer', {
+                                height: '390',
+                                width: '640',
+                                videoId: "@Model.YouTube.Split('=')[1]"
+                            });
+                        }
+                    </script>
                 </div>
             </div>
         </div>
