@@ -284,6 +284,10 @@
     <Content Include="Content\SiteClasses.css.map">
       <DependentUpon>SiteClasses.css</DependentUpon>
     </Content>
+    <Content Include="dump\DrustveneMrezePravaBaza\movies.bson" />
+    <Content Include="dump\DrustveneMrezePravaBaza\movies.metadata.json" />
+    <Content Include="dump\DrustveneMrezePravaBaza\users.bson" />
+    <Content Include="dump\DrustveneMrezePravaBaza\users.metadata.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\HomeScripts\Filler.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
