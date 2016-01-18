@@ -254,6 +254,10 @@
     <Compile Include="Twitter\TwitterUserAuthorization.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\aspnet-DrustveneMrezev3-20151031122430.mdf" />
+    <Content Include="App_Data\aspnet-DrustveneMrezev3-20151031122430_log.ldf">
+      <DependentUpon>aspnet-DrustveneMrezev3-20151031122430.mdf</DependentUpon>
+    </Content>
     <Content Include="CleanDuplicates.txt" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -342,9 +346,7 @@
     <Content Include="Views\Manage\ShowRecommendMovies.cshtml" />
     <Content Include="Views\Home\ShowMovies.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
