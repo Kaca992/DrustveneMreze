@@ -92,13 +92,18 @@ namespace DrustveneMrezev3.Managers
 
         public async Task<ObjectId?> InsertMovieByName(string name)
         {
-            SearchContainer<SearchMovie> results = Client.SearchMovie(name);
-            if (results.TotalResults >= 1)
+            MongoDBManager mm = new MongoDBManager();
+            var found = await mm.FindMoviesByName(name);
+            if (found.Count == 0)
             {
-                SearchMovie tmdb = results.Results.First();
-                var movie = await ParseMovie(tmdb.Id);
-                await MongoManager.InsertNewMovie(movie);
-                return movie.ID;
+                SearchContainer<SearchMovie> results = Client.SearchMovie(name);
+                if (results.TotalResults >= 1)
+                {
+                    SearchMovie tmdb = results.Results.First();
+                    var movie = await ParseMovie(tmdb.Id);
+                    await MongoManager.InsertNewMovie(movie);
+                    return movie.ID;
+                }
             }
             return null;
         }

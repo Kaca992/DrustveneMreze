@@ -254,6 +254,7 @@
     <Compile Include="Twitter\TwitterUserAuthorization.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CleanDuplicates.txt" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\PagedList.css" />
@@ -335,6 +336,7 @@
     <Content Include="Views\Manage\MovieRecommendations.cshtml" />
     <Content Include="Views\Home\Fill.cshtml" />
     <Content Include="Views\Manage\ShowRecommendMovies.cshtml" />
+    <Content Include="Views\Home\ShowMovies.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

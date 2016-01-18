@@ -161,12 +161,26 @@ namespace DrustveneMrezev3.Controllers
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    // Get the information about the user from the external login provider
+                    UserInformation facebookUser = new UserInformation()
+                    {
+                        Birthday = default(DateTime),
+                        FirstName = "",
+                        LastName = "",
+                        Email = user.Email,
+                        Id = user.Id
+                    };
+                    facebookUser.MovieLikes = new List<MovieLike>();
+
+                    MongoDBManager mongoManager = new MongoDBManager();
+                    mongoManager.InsertNewUser(facebookUser);
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -420,7 +434,17 @@ namespace DrustveneMrezev3.Controllers
                             foreach (dynamic movie in data.movies.data)
                             {
                                 TMDbManager movieManager = new TMDbManager();
-                                ObjectId? movieId = await movieManager.InsertMovieByName(movie.name);
+                                MongoDBManager mm = new MongoDBManager();
+                                var exists = await mm.FindMoviesByName((string)movie.name);
+                                ObjectId? movieId = null;
+                                if (exists.Count >= 1)
+                                {
+                                    movieId = exists.First().ID;
+                                }
+                                else
+                                {
+                                    movieId = await movieManager.InsertMovieByName(movie.name);
+                                }
                                 if (movieId != null)
                                 {
                                     facebookUser.MovieLikes.Add(new MovieLike() { Id = movieId.Value, Name = movie.name });

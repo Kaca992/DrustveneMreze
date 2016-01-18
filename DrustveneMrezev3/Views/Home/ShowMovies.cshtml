@@ -1,0 +1,68 @@
+﻿@using PagedList.Mvc;
+@model PagedList.IPagedList<DrustveneMrezev3.Models.MovieListModel>
+@{
+    ViewBag.Title = "ShowUserMovies";
+}
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<div class="row">
+    @foreach (var movieLike in Model)
+    {
+        <div class="col-md-3 col-sm-4 col-xs-6 movieItem" style="padding: 10px;">
+            <div class="largeImage" style="background: #eee url('@movieLike.Poster.Replace("http", "https")') no-repeat center top; background-size: 100% 100%;">
+            </div>
+            <div class="hoverInfo">
+                <div class="hoverContent">
+                    <h3>@movieLike.Title</h3>
+                    <br />
+                    <a href=@Url.Action("ShowMovieInformation", "Manage",new {id = movieLike.ID}) class="btn btn-primary btn-sm">Click for more details</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index", "Home" , new { page }))
+
+<style>
+    .hoverInfo {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        opacity: 0;
+    }
+
+    .hoverContent {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+        margin: 10px;
+        padding: 10px;
+        background-color: rgba(34, 34, 34, 0.9);
+    }
+
+    .largeImage {
+        border-radius: 6px;
+        padding: 25px;
+        text-align: center;
+        height: 410px;
+        overflow-y: auto;
+    }
+</style>
+<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.movieItem').mouseover(function () {
+            $(this).find(".hoverInfo").first().css({ 'opacity': 1 });
+        });
+
+        $('.movieItem').mouseout(function () {
+            $(this).find(".hoverInfo").first().css({ 'opacity': 0 });
+        });
+    });
+</script>

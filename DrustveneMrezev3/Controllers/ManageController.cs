@@ -335,7 +335,7 @@ namespace DrustveneMrezev3.Controllers
             return Json(string.Empty);
         }
 
-        public async Task<ActionResult> UpdateUserLikes(IndexViewModel model)
+        public async Task<ActionResult> UpdateUserLikes(IndexViewModel model, int? page)
         {
             if (Session["tokenFB"] != null)
             {
@@ -345,7 +345,7 @@ namespace DrustveneMrezev3.Controllers
             }
             else
             {
-                return View("ShowUserMovies", new List<MovieLike>());
+                return View("ShowUserMovies", (new List<MovieLike>()).ToPagedList(page ?? 1, 12));
             }
 
         }

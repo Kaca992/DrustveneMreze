@@ -121,6 +121,11 @@ namespace DrustveneMrezev3.Managers
             }
         }
 
+        public async Task<List<Movie>> FindMoviesByName(string name)
+        {
+            return await Movies.Find(x => x.Title == name).ToListAsync();
+        }
+
         /*public async Task InsertNewMovie(string id, string title)
         {
             Movie movie = await OMDbManager.GetData(id, title);
@@ -153,7 +158,7 @@ namespace DrustveneMrezev3.Managers
 
         public async Task<List<Movie>> GetMovies()
         {
-            return await Movies.Find(new BsonDocument()).ToListAsync();
+            return await Movies.Find(new BsonDocument()).Limit(48).ToListAsync();
         }
 
         public List<Movie> GetMoviesWithGenre(string genre)
